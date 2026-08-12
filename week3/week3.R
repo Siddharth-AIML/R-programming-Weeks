@@ -1,25 +1,21 @@
 print(c(2,3,5,7) + c(-2, -3, -5, 8))
  
-# power operator
+
 print(2^3)
 print(2**0.5)
 print(2 ** -0.5)
  
-# power with scalar
 print(c(3, 5, 8, 7)^2)
  
 print(c(3, 4, 5, 6) ^ c(2, 3))
-# warning msg when length of vectors are not multiple of each other
+
  
- 
-#division operator %/% remainder is discarded
 print(2 %/% 2)
 print(2 %/% 3)
 print(5 %/% 2)
  
 print(c(2, 3, 4, 5) %/% c(1, 2 ))
- 
-# modulo operator %% remainder is kept
+
 print(2 %% 2)
 print(2 %% 3)
 print(5 %% 2)
