@@ -1,0 +1,1102 @@
+---
+title: "Lab 3: Multi-Source Retail Sales Data Integration & Analysis"
+author: "Siddharth Metkari"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+    number_sections: true
+---
+
+# Introduction
+
+This lab focuses on integrating retail sales data from multiple
+file formats and performing data cleaning, analysis, customer
+segmentation, and SQL-based analysis.
+
+The analysis uses CSV, JSON, Excel, and SQLite data sources.
+
+The major objectives are:
+
+- Import and clean data from multiple sources
+- Integrate transactions, products, and customer information
+- Analyze sales, products, countries, and customers
+- Classify customers based on purchase value
+- Store the integrated data in SQLite
+- Execute SQL queries
+- Generate business insights
+
+# Setup
+
+## Load Required Packages
+
+```{r setup, message=FALSE, warning=FALSE}
+
+library(tidyverse)
+library(jsonlite)
+library(readxl)
+library(writexl)
+library(DBI)
+library(RSQLite)
+
+```
+
+## Set Working Directory
+
+The notebook is designed to work from the `Lab3_Retail_Analysis`
+folder containing the Excel dataset and generated source files.
+
+```{r working-directory}
+
+if (
+  !file.exists("Online Retail.xlsx") &&
+  dir.exists("Lab3_Retail_Analysis")
+) {
+  setwd("Lab3_Retail_Analysis")
+}
+
+getwd()
+
+list.files()
+
+```
+
+```{r file-check}
+
+if (!file.exists("Online Retail.xlsx")) {
+  stop(
+    paste(
+      "Online Retail.xlsx was not found.",
+      "Make sure the file is inside the Lab3_Retail_Analysis folder."
+    )
+  )
+}
+
+```
+
+# Task 1: Import and Clean the Data
+
+## Load the Original Dataset
+
+The original Online Retail dataset is stored in Excel format.
+
+```{r load-original}
+
+retail <- read_excel("Online Retail.xlsx")
+
+```
+
+## Dataset Dimensions
+
+```{r original-dimensions}
+
+dim(retail)
+
+```
+
+## First Six Records
+
+```{r original-head}
+
+head(retail)
+
+```
+
+## Dataset Structure
+
+```{r original-structure}
+
+str(retail)
+
+```
+
+## Create the Transactions CSV Source
+
+The transaction source contains invoice, product, customer,
+quantity, and transaction date information.
+
+```{r create-transactions}
+
+transactions_source <- retail %>%
+  select(
+    InvoiceNo,
+    StockCode,
+    CustomerID,
+    Quantity,
+    InvoiceDate
+  )
+
+write_csv(
+  transactions_source,
+  "transactions.csv"
+)
+
+```
+
+## Create the Products JSON Source
+
+The product source contains product codes, descriptions, and
+unit prices.
+
+A single record is maintained for each `StockCode` to avoid
+duplicating transaction records during the integration step.
+
+```{r create-products}
+
+products_source <- retail %>%
+  select(
+    StockCode,
+    Description,
+    UnitPrice
+  ) %>%
+  filter(
+    !is.na(StockCode)
+  ) %>%
+  group_by(
+    StockCode
+  ) %>%
+  summarise(
+    Description =
+      if (
+        all(is.na(Description))
+      ) {
+        NA_character_
+      } else {
+        first(na.omit(Description))
+      },
+    UnitPrice =
+      if (
+        all(is.na(UnitPrice))
+      ) {
+        NA_real_
+      } else {
+        median(
+          UnitPrice,
+          na.rm = TRUE
+        )
+      },
+    .groups = "drop"
+  )
+
+write_json(
+  products_source,
+  "products.json",
+  pretty = TRUE,
+  auto_unbox = TRUE
+)
+
+```
+
+## Create the Customers Excel Source
+
+The customer source contains customer IDs and countries.
+
+```{r create-customers}
+
+customers_source <- retail %>%
+  select(
+    CustomerID,
+    Country
+  ) %>%
+  filter(
+    !is.na(CustomerID)
+  ) %>%
+  group_by(
+    CustomerID
+  ) %>%
+  summarise(
+    Country =
+      if (
+        all(is.na(Country))
+      ) {
+        NA_character_
+      } else {
+        first(na.omit(Country))
+      },
+    .groups = "drop"
+  )
+
+write_xlsx(
+  customers_source,
+  "customers.xlsx"
+)
+
+```
+
+## Verify the Three Source Files
+
+```{r verify-source-files}
+
+source_files <- c(
+  "transactions.csv",
+  "products.json",
+  "customers.xlsx"
+)
+
+source_check <- data.frame(
+  File = source_files,
+  Exists = file.exists(source_files)
+)
+
+source_check
+
+```
+
+## Import CSV
+
+```{r import-csv}
+
+transactions <- read_csv(
+  "transactions.csv",
+  show_col_types = FALSE
+)
+
+head(transactions)
+
+```
+
+## Import JSON
+
+```{r import-json}
+
+products <- fromJSON(
+  "products.json"
+)
+
+head(products)
+
+```
+
+## Import Excel
+
+```{r import-customers}
+
+customers <- read_excel(
+  "customers.xlsx"
+)
+
+head(customers)
+
+```
+
+## Dataset Dimensions
+
+```{r source-dimensions}
+
+dim(transactions)
+
+dim(products)
+
+dim(customers)
+
+```
+
+## Check Missing Values
+
+Missing values are checked before cleaning so that problematic
+records can be identified.
+
+```{r missing-values}
+
+transactions_missing <- colSums(
+  is.na(transactions)
+)
+
+products_missing <- colSums(
+  is.na(products)
+)
+
+customers_missing <- colSums(
+  is.na(customers)
+)
+
+transactions_missing
+products_missing
+customers_missing
+
+```
+
+## Check Duplicate Records
+
+```{r duplicates}
+
+transaction_duplicates <- sum(
+  duplicated(transactions)
+)
+
+product_duplicates <- sum(
+  duplicated(products)
+)
+
+customer_duplicates <- sum(
+  duplicated(customers)
+)
+
+transaction_duplicates
+product_duplicates
+customer_duplicates
+
+```
+
+## Remove Duplicate Records
+
+Duplicate transactions are removed to avoid double counting.
+
+Product and customer datasets are reduced to one record per
+identifier.
+
+```{r remove-duplicates}
+
+transactions <- transactions %>%
+  distinct()
+
+products <- products %>%
+  distinct(
+    StockCode,
+    .keep_all = TRUE
+  )
+
+customers <- customers %>%
+  distinct(
+    CustomerID,
+    .keep_all = TRUE
+  )
+
+```
+
+## Remove Transactions with Missing Customer IDs
+
+Customer-level analysis requires valid customer identifiers.
+
+```{r remove-missing-customers}
+
+missing_customer_count <- sum(
+  is.na(transactions$CustomerID)
+)
+
+missing_customer_count
+
+transactions <- transactions %>%
+  filter(
+    !is.na(CustomerID)
+  )
+
+```
+
+## Remove Invalid Quantities
+
+Transactions with zero or negative quantities are removed because
+the analysis focuses on positive sales transactions.
+
+```{r clean-quantity}
+
+invalid_quantity_count <- sum(
+  transactions$Quantity <= 0,
+  na.rm = TRUE
+)
+
+invalid_quantity_count
+
+transactions <- transactions %>%
+  filter(
+    Quantity > 0
+  )
+
+```
+
+## Remove Invalid Prices
+
+Products with missing or non-positive prices are removed.
+
+```{r clean-price}
+
+invalid_price_count <- sum(
+  products$UnitPrice <= 0,
+  na.rm = TRUE
+)
+
+invalid_price_count
+
+products <- products %>%
+  filter(
+    !is.na(UnitPrice),
+    UnitPrice > 0
+  )
+
+```
+
+## Final Clean Dataset Dimensions
+
+```{r final-clean-dimensions}
+
+dim(transactions)
+
+dim(products)
+
+dim(customers)
+
+```
+
+## Cleaning Interpretation
+
+The following cleaning decisions were applied:
+
+1. Duplicate records were removed to prevent double counting.
+2. Transactions with missing `CustomerID` were removed because
+   customer-level analysis requires valid customer identifiers.
+3. Transactions with `Quantity <= 0` were removed because the
+   analysis focuses on positive sales.
+4. Products with missing or non-positive `UnitPrice` were removed.
+5. Missing values were inspected before integration.
+6. Product records were reduced to one record per `StockCode`
+   to prevent transaction duplication during joins.
+
+# Task 2: Integrate Multiple Data Sources
+
+## Check Unmatched Products
+
+The transaction dataset is checked against the product dataset
+using `StockCode`.
+
+```{r unmatched-products}
+
+unmatched_products <- transactions %>%
+  anti_join(
+    products,
+    by = "StockCode"
+  )
+
+nrow(unmatched_products)
+
+```
+
+## Check Unmatched Customers
+
+The transaction dataset is checked against the customer dataset
+using `CustomerID`.
+
+```{r unmatched-customers}
+
+unmatched_customers <- transactions %>%
+  anti_join(
+    customers,
+    by = "CustomerID"
+  )
+
+nrow(unmatched_customers)
+
+```
+
+## Join Transactions with Products
+
+A left join is used so that valid transaction records are retained
+while product information is matched where available.
+
+```{r join-products}
+
+sales_data <- transactions %>%
+  left_join(
+    products,
+    by = "StockCode"
+  )
+
+```
+
+## Join Customer Information
+
+Customer information is then added using `CustomerID`.
+
+```{r join-customers}
+
+sales_data <- sales_data %>%
+  left_join(
+    customers,
+    by = "CustomerID"
+  )
+
+```
+
+## Calculate Revenue
+
+Revenue is calculated using:
+
+**Revenue = Quantity × UnitPrice**
+
+```{r calculate-revenue}
+
+sales_data <- sales_data %>%
+  mutate(
+    Revenue = Quantity * UnitPrice
+  )
+
+```
+
+## Verify the Integrated Dataset
+
+```{r integrated-dataset}
+
+dim(sales_data)
+
+head(
+  sales_data,
+  10
+)
+
+```
+
+## Missing Values After Integration
+
+```{r integrated-missing}
+
+colSums(
+  is.na(sales_data)
+)
+
+```
+
+## Join Interpretation
+
+A `left_join()` was selected because all valid transaction records
+should be retained while product and customer information is
+matched wherever available.
+
+This approach also allows unmatched records to be identified
+without unnecessarily removing valid transactions.
+
+# Task 3: Sales and Customer Analysis
+
+## Total Sales Revenue
+
+```{r total-revenue}
+
+total_revenue <- sales_data %>%
+  summarise(
+    Total_Revenue =
+      sum(
+        Revenue,
+        na.rm = TRUE
+      )
+  )
+
+total_revenue
+
+```
+
+### Interpretation
+
+The total revenue represents the overall sales value generated
+after the data cleaning and integration process.
+
+## Top 5 Products by Revenue
+
+```{r top-products}
+
+top_5_products <- sales_data %>%
+  group_by(
+    StockCode,
+    Description
+  ) %>%
+  summarise(
+    Revenue =
+      sum(
+        Revenue,
+        na.rm = TRUE
+      ),
+    .groups = "drop"
+  ) %>%
+  arrange(
+    desc(Revenue)
+  ) %>%
+  slice_head(
+    n = 5
+  )
+
+top_5_products
+
+```
+
+### Interpretation
+
+The products with the highest revenue are important contributors
+to overall sales and can be considered for inventory and marketing
+strategies.
+
+## Top 5 Countries by Revenue
+
+```{r top-countries}
+
+top_5_countries <- sales_data %>%
+  group_by(
+    Country
+  ) %>%
+  summarise(
+    Revenue =
+      sum(
+        Revenue,
+        na.rm = TRUE
+      ),
+    .groups = "drop"
+  ) %>%
+  arrange(
+    desc(Revenue)
+  ) %>%
+  slice_head(
+    n = 5
+  )
+
+top_5_countries
+
+```
+
+### Interpretation
+
+The countries with the highest revenue represent the strongest
+markets in the dataset.
+
+## Top 5 Customers by Purchase Value
+
+```{r top-customers}
+
+top_5_customers <- sales_data %>%
+  group_by(
+    CustomerID
+  ) %>%
+  summarise(
+    Total_Purchase_Value =
+      sum(
+        Revenue,
+        na.rm = TRUE
+      ),
+    .groups = "drop"
+  ) %>%
+  arrange(
+    desc(Total_Purchase_Value)
+  ) %>%
+  slice_head(
+    n = 5
+  )
+
+top_5_customers
+
+```
+
+### Interpretation
+
+The top customers contribute a significant portion of the
+company's revenue and may be suitable targets for loyalty and
+retention strategies.
+
+## Customer Value Classification
+
+Customer purchase values are calculated first.
+
+```{r customer-value}
+
+customer_value <- sales_data %>%
+  group_by(
+    CustomerID
+  ) %>%
+  summarise(
+    Total_Purchase_Value =
+      sum(
+        Revenue,
+        na.rm = TRUE
+      ),
+    .groups = "drop"
+  )
+
+head(customer_value)
+
+```
+
+## Calculate Quartile Thresholds
+
+```{r customer-quartiles}
+
+q1 <- quantile(
+  customer_value$Total_Purchase_Value,
+  0.25,
+  na.rm = TRUE
+)
+
+q2 <- quantile(
+  customer_value$Total_Purchase_Value,
+  0.50,
+  na.rm = TRUE
+)
+
+q3 <- quantile(
+  customer_value$Total_Purchase_Value,
+  0.75,
+  na.rm = TRUE
+)
+
+q1
+q2
+q3
+
+```
+
+## Classify Customers Using `case_when()`
+
+Customers are classified into four groups:
+
+- Low Value
+- Medium Value
+- High Value
+- Premium
+
+```{r customer-classification}
+
+customer_value <- customer_value %>%
+  mutate(
+    Customer_Category = case_when(
+      Total_Purchase_Value <= q1 ~ "Low Value",
+      Total_Purchase_Value <= q2 ~ "Medium Value",
+      Total_Purchase_Value <= q3 ~ "High Value",
+      TRUE ~ "Premium"
+    )
+  )
+
+customer_value
+
+```
+
+## Customer Category Counts
+
+```{r customer-category-counts}
+
+customer_category_counts <- customer_value %>%
+  count(
+    Customer_Category
+  )
+
+customer_category_counts
+
+```
+
+### Interpretation
+
+Customer classification helps identify differences in customer
+value and can support targeted retention and marketing strategies.
+
+## Market Performance
+
+```{r market-performance}
+
+market_performance <- sales_data %>%
+  group_by(
+    Country
+  ) %>%
+  summarise(
+    Revenue =
+      sum(
+        Revenue,
+        na.rm = TRUE
+      ),
+    .groups = "drop"
+  ) %>%
+  filter(
+    !is.na(Country)
+  ) %>%
+  filter(
+    Revenue > 0
+  ) %>%
+  arrange(
+    desc(Revenue)
+  )
+
+head(
+  market_performance,
+  10
+)
+
+```
+
+## High-Performing Market
+
+```{r high-market}
+
+high_performing_market <- market_performance %>%
+  slice_head(
+    n = 1
+  )
+
+high_performing_market
+
+```
+
+## Underperforming Market
+
+```{r low-market}
+
+underperforming_market <- market_performance %>%
+  slice_tail(
+    n = 1
+  )
+
+underperforming_market
+
+```
+
+### Market Interpretation
+
+```{r market-interpretation, results='asis'}
+
+cat(
+  "The high-performing market is ",
+  high_performing_market$Country,
+  " with revenue of ",
+  round(high_performing_market$Revenue, 2),
+  "."
+)
+
+cat("\n\n")
+
+cat(
+  "The underperforming market is ",
+  underperforming_market$Country,
+  " with revenue of ",
+  round(underperforming_market$Revenue, 2),
+  "."
+)
+
+```
+
+# Task 4: SQLite Database and SQL Queries
+
+## Create SQLite Database
+
+```{r sqlite-connect}
+
+con <- dbConnect(
+  RSQLite::SQLite(),
+  "retail_sales.db"
+)
+
+```
+
+## Store Integrated Dataset
+
+The final integrated dataset is stored in a SQLite table named
+`retail_sales`.
+
+```{r sqlite-write}
+
+dbWriteTable(
+  con,
+  "retail_sales",
+  sales_data,
+  overwrite = TRUE
+)
+
+```
+
+## Verify Database Tables
+
+```{r sqlite-tables}
+
+dbListTables(con)
+
+```
+
+## Verify Table Fields
+
+```{r sqlite-fields}
+
+dbListFields(
+  con,
+  "retail_sales"
+)
+
+```
+
+## SQL Query 1: Top 5 Customers
+
+The first SQL query identifies the five customers with the
+highest total revenue.
+
+```{r sql-query-1}
+
+sql_query_1 <- "
+
+SELECT
+    CustomerID,
+    SUM(Revenue) AS TotalRevenue
+FROM retail_sales
+GROUP BY CustomerID
+ORDER BY TotalRevenue DESC
+LIMIT 5;
+
+"
+
+top_5_customers_sql <- dbGetQuery(
+  con,
+  sql_query_1
+)
+
+top_5_customers_sql
+
+```
+
+### Interpretation
+
+This query identifies the most valuable customers based on their
+total purchase value.
+
+## SQL Query 2: Revenue by Country
+
+The second SQL query calculates total revenue for each country.
+
+```{r sql-query-2}
+
+sql_query_2 <- "
+
+SELECT
+    Country,
+    SUM(Revenue) AS TotalRevenue
+FROM retail_sales
+GROUP BY Country
+ORDER BY TotalRevenue DESC;
+
+"
+
+revenue_by_country_sql <- dbGetQuery(
+  con,
+  sql_query_2
+)
+
+head(
+  revenue_by_country_sql,
+  10
+)
+
+```
+
+### Interpretation
+
+This query allows the business to compare revenue performance
+across different countries and identify strong and weak markets.
+
+## Database Record Count
+
+```{r database-count}
+
+database_count <- dbGetQuery(
+  con,
+  "
+  SELECT COUNT(*) AS TotalRecords
+  FROM retail_sales;
+  "
+)
+
+database_count
+
+```
+
+## Close Database Connection
+
+```{r close-database}
+
+dbDisconnect(
+  con
+)
+
+```
+
+# Business Insights
+
+## Insight 1: Overall Revenue
+
+```{r insight-revenue, results='asis'}
+
+cat(
+  "The cleaned and integrated dataset generated total revenue of ",
+  round(total_revenue$Total_Revenue, 2),
+  "."
+)
+
+```
+
+This provides an overall measure of the sales value represented
+by the cleaned dataset.
+
+## Insight 2: Highest-Revenue Product
+
+```{r insight-product, results='asis'}
+
+cat(
+  "The highest-revenue product is '",
+  top_5_products$Description[1],
+  "' with revenue of ",
+  round(top_5_products$Revenue[1], 2),
+  "."
+)
+
+```
+
+This product represents an important contributor to overall
+sales and can be considered for inventory and marketing decisions.
+
+## Insight 3: Market Performance
+
+```{r insight-market, results='asis'}
+
+cat(
+  high_performing_market$Country,
+  " is the highest-performing market with revenue of ",
+  round(high_performing_market$Revenue, 2),
+  ", while ",
+  underperforming_market$Country,
+  " has the lowest revenue among the analyzed markets."
+)
+
+```
+
+This indicates that sales performance differs significantly
+across countries and that weaker markets may require additional
+marketing or market-development strategies.
+
+# Final Output File Verification
+
+```{r final-files}
+
+output_files <- c(
+  "transactions.csv",
+  "products.json",
+  "customers.xlsx",
+  "retail_sales.db"
+)
+
+final_check <- data.frame(
+  File = output_files,
+  Exists = file.exists(output_files)
+)
+
+final_check
+
+```
+
+# Conclusion
+
+This lab demonstrated a complete retail data integration and
+analytics workflow.
+
+Data was imported from CSV, JSON, and Excel sources, cleaned,
+validated, and integrated using joins.
+
+The integrated dataset was then used to calculate total revenue,
+identify top products, countries, and customers, classify customers
+according to purchase value, and evaluate market performance.
+
+Finally, the integrated dataset was stored in SQLite and analyzed
+using SQL queries.
+
+The resulting analysis provides useful information for understanding
+customer value, product performance, and market performance.
+
+getwd()
+
+rmarkdown::render("Lab3_Retail_notebook.Rmd")
+setwd("Lab3_Retail_Analysis")

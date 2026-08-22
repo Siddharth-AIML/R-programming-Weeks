@@ -1,0 +1,6 @@
+install.packages("tidyverse", repos = "https://cloud.r-project.org")
+install.packages("jsonlite", repos = "https://cloud.r-project.org")
+install.packages("readxl", repos = "https://cloud.r-project.org")
+install.packages("writexl", repos = "https://cloud.r-project.org")
+install.packages("DBI", repos = "https://cloud.r-project.org")
+install.packages("RSQLite", repos = "https://cloud.r-project.org")
