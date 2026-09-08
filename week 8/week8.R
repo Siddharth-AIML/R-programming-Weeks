@@ -588,3 +588,651 @@ print(class(mylist))
 cat("\n============================================================\n")
 cat("COMPLETE LIST OPERATIONS DEMONSTRATION FINISHED\n")
 cat("============================================================\n")
+
+
+# ============================================================
+# R PROGRAMMING - WEEK 8
+# FACTORS
+# Based on NPTEL Week 8 Notes
+# ============================================================
+
+
+# ============================================================
+# 1. BASIC FACTOR
+# ============================================================
+
+cat("\n============================================================\n")
+cat("1. BASIC FACTOR\n")
+cat("============================================================\n")
+
+x <- c("Male", "Female", "Male", "Female", "Male")
+
+cat("\nOriginal character vector:\n")
+print(x)
+
+y <- factor(x)
+
+cat("\nFactor:\n")
+print(y)
+
+cat("\nLevels:\n")
+print(levels(y))
+
+
+# ============================================================
+# 2. FACTOR WITH NUMERIC VALUES
+# ============================================================
+
+cat("\n============================================================\n")
+cat("2. FACTOR WITH NUMERIC VALUES\n")
+cat("============================================================\n")
+
+x <- c(3, 4, 5, 6, 1, 2, 3, 3, 4, 4, 5, 6)
+
+cat("\nOriginal vector:\n")
+print(x)
+
+y <- as.factor(x)
+
+cat("\nFactor:\n")
+print(y)
+
+cat("\nLevels:\n")
+print(levels(y))
+
+
+# ============================================================
+# 3. FACTOR WITH CHARACTER VALUES
+# ============================================================
+
+cat("\n============================================================\n")
+cat("3. CHARACTER FACTOR\n")
+cat("============================================================\n")
+
+x <- factor(
+  c(
+    "lemonade",
+    "lemonade",
+    "juice",
+    "lemonade",
+    "water"
+  )
+)
+
+cat("\nFactor:\n")
+print(x)
+
+cat("\nLevels:\n")
+print(levels(x))
+
+# By default, character levels are arranged alphabetically.
+
+
+# ============================================================
+# 4. FACTOR WITH CUSTOM LEVEL ORDER
+# ============================================================
+
+cat("\n============================================================\n")
+cat("4. CUSTOM LEVEL ORDER\n")
+cat("============================================================\n")
+
+x <- factor(
+  c(
+    "lemonade",
+    "lemonade",
+    "juice",
+    "lemonade",
+    "water"
+  ),
+  levels = c("water", "juice", "lemonade")
+)
+
+cat("\nFactor with custom levels:\n")
+print(x)
+
+cat("\nCustom levels:\n")
+print(levels(x))
+
+
+# ============================================================
+# 5. DIE ROLL EXAMPLE
+# ============================================================
+
+cat("\n============================================================\n")
+cat("5. DIE ROLL FACTOR EXAMPLE\n")
+cat("============================================================\n")
+
+# Die rolled seven times
+
+y <- c(1, 4, 3, 5, 4, 2, 4)
+
+cat("\nObserved die outcomes:\n")
+print(y)
+
+# Possible values of die face
+
+possible.dieface <- c(1, 2, 3, 4, 5, 6)
+
+cat("\nPossible die faces:\n")
+print(possible.dieface)
+
+# Labels for die faces
+
+labels.dieface <- c(
+  "one",
+  "two",
+  "three",
+  "four",
+  "five",
+  "six"
+)
+
+cat("\nLabels:\n")
+print(labels.dieface)
+
+# Create factor
+
+facy <- factor(
+  y,
+  levels = possible.dieface,
+  labels = labels.dieface
+)
+
+cat("\nFactor with labels:\n")
+print(facy)
+
+cat("\nLevels:\n")
+print(levels(facy))
+
+
+# ============================================================
+# 6. DIFFERENCE BETWEEN VECTOR AND FACTOR
+# ============================================================
+
+cat("\n============================================================\n")
+cat("6. VECTOR VS FACTOR\n")
+cat("============================================================\n")
+
+y <- c(1, 4, 3, 5, 4, 2, 4)
+
+facy <- factor(
+  y,
+  levels = 1:6,
+  labels = c(
+    "one",
+    "two",
+    "three",
+    "four",
+    "five",
+    "six"
+  )
+)
+
+cat("\nOriginal numeric vector:\n")
+print(y)
+
+cat("\nFactor:\n")
+print(facy)
+
+cat("\nClass of numeric vector:\n")
+print(class(y))
+
+cat("\nClass of factor:\n")
+print(class(facy))
+
+
+# ============================================================
+# 7. CLASS FUNCTION
+# ============================================================
+
+cat("\n============================================================\n")
+cat("7. CLASS FUNCTION\n")
+cat("============================================================\n")
+
+cat("\nClass of number 9:\n")
+print(class(9))
+
+cat("\nClass of character '9':\n")
+print(class("9"))
+
+cat("\nClass of function print:\n")
+print(class(print))
+
+x <- matrix(
+  nrow = 2,
+  ncol = 2,
+  data = 1:4
+)
+
+cat("\nMatrix:\n")
+print(x)
+
+cat("\nClass of matrix:\n")
+print(class(x))
+
+
+# ============================================================
+# 8. UNCLASS FUNCTION
+# ============================================================
+
+cat("\n============================================================\n")
+cat("8. UNCLASS FUNCTION\n")
+cat("============================================================\n")
+
+brands <- c(
+  "A",
+  "A",
+  "B",
+  "B",
+  "B",
+  "B",
+  "C"
+)
+
+cat("\nOriginal brands:\n")
+print(brands)
+
+brands_fac <- factor(brands)
+
+cat("\nFactor brands:\n")
+print(brands_fac)
+
+cat("\nLevels:\n")
+print(levels(brands_fac))
+
+cat("\nUnclass factor:\n")
+print(unclass(brands_fac))
+
+
+# ============================================================
+# 9. USING UNCLASS CODES WITH ANOTHER VECTOR
+# ============================================================
+
+cat("\n============================================================\n")
+cat("9. USING UNCLASS CODES\n")
+cat("============================================================\n")
+
+brands <- c(
+  "A",
+  "A",
+  "B",
+  "B",
+  "B",
+  "B",
+  "C"
+)
+
+brands_fac <- factor(brands)
+
+colours <- c(
+  "blue",
+  "green",
+  "red"
+)
+
+cat("\nBrands factor:\n")
+print(brands_fac)
+
+cat("\nNumeric codes:\n")
+print(unclass(brands_fac))
+
+cat("\nColours selected using factor codes:\n")
+print(colours[unclass(brands_fac)])
+
+
+# ============================================================
+# 10. UNCLASS WITH LEMONADE EXAMPLE
+# ============================================================
+
+cat("\n============================================================\n")
+cat("10. UNCLASS WITH LEMONADE EXAMPLE\n")
+cat("============================================================\n")
+
+x <- factor(
+  c(
+    "lemonade",
+    "lemonade",
+    "juice",
+    "lemonade",
+    "water"
+  )
+)
+
+cat("\nFactor:\n")
+print(x)
+
+cat("\nUnclass factor:\n")
+print(unclass(x))
+
+cat("\nLevels:\n")
+print(levels(x))
+
+
+# ============================================================
+# 11. CUSTOM LEVELS AND UNCLASS
+# ============================================================
+
+cat("\n============================================================\n")
+cat("11. CUSTOM LEVELS + UNCLASS\n")
+cat("============================================================\n")
+
+x <- factor(
+  c(
+    "lemonade",
+    "lemonade",
+    "juice",
+    "lemonade",
+    "water"
+  ),
+  levels = c(
+    "water",
+    "juice",
+    "lemonade"
+  )
+)
+
+cat("\nFactor:\n")
+print(x)
+
+cat("\nCustom levels:\n")
+print(levels(x))
+
+cat("\nInternal numeric codes:\n")
+print(unclass(x))
+
+
+# ============================================================
+# 12. ORDERED FACTOR
+# ============================================================
+
+cat("\n============================================================\n")
+cat("12. ORDERED FACTOR\n")
+cat("============================================================\n")
+
+income <- ordered(
+  c(
+    "high",
+    "high",
+    "low",
+    "medium",
+    "medium"
+  ),
+  levels = c(
+    "low",
+    "medium",
+    "high"
+  )
+)
+
+cat("\nOrdered factor:\n")
+print(income)
+
+cat("\nLevels:\n")
+print(levels(income))
+
+cat("\nInternal numeric codes:\n")
+print(unclass(income))
+
+
+# ============================================================
+# 13. COMPARISON OF ORDERED FACTOR
+# ============================================================
+
+cat("\n============================================================\n")
+cat("13. ORDERED FACTOR COMPARISON\n")
+cat("============================================================\n")
+
+income <- ordered(
+  c(
+    "high",
+    "low",
+    "medium",
+    "high"
+  ),
+  levels = c(
+    "low",
+    "medium",
+    "high"
+  )
+)
+
+cat("\nIncome:\n")
+print(income)
+
+cat("\nIs high greater than low?\n")
+print(income[1] > income[2])
+
+cat("\nIs low less than medium?\n")
+print(income[2] < income[3])
+
+
+# ============================================================
+# 14. LEVELS FUNCTION
+# ============================================================
+
+cat("\n============================================================\n")
+cat("14. LEVELS FUNCTION\n")
+cat("============================================================\n")
+
+fruits <- factor(
+  c(
+    "Apple",
+    "Banana",
+    "Apple",
+    "Orange",
+    "Banana"
+  )
+)
+
+cat("\nFruit factor:\n")
+print(fruits)
+
+cat("\nCurrent levels:\n")
+print(levels(fruits))
+
+
+# ============================================================
+# 15. CHANGING LEVEL LABELS
+# ============================================================
+
+cat("\n============================================================\n")
+cat("15. CHANGING LEVEL LABELS\n")
+cat("============================================================\n")
+
+x <- factor(
+  c(
+    "A",
+    "B",
+    "A",
+    "C",
+    "B"
+  )
+)
+
+cat("\nOriginal factor:\n")
+print(x)
+
+cat("\nOriginal levels:\n")
+print(levels(x))
+
+levels(x) <- c(
+  "Excellent",
+  "Good",
+  "Average"
+)
+
+cat("\nFactor after changing labels:\n")
+print(x)
+
+cat("\nNew levels:\n")
+print(levels(x))
+
+
+# ============================================================
+# 16. FACTOR FOR GENDER
+# ============================================================
+
+cat("\n============================================================\n")
+cat("16. GENDER CATEGORICAL VARIABLE\n")
+cat("============================================================\n")
+
+gender <- factor(
+  c(
+    "Male",
+    "Female",
+    "Male",
+    "Female",
+    "Male"
+  )
+)
+
+cat("\nGender factor:\n")
+print(gender)
+
+cat("\nGender levels:\n")
+print(levels(gender))
+
+cat("\nGender class:\n")
+print(class(gender))
+
+cat("\nGender internal codes:\n")
+print(unclass(gender))
+
+
+# ============================================================
+# 17. FACTOR FOR PERFORMANCE
+# ============================================================
+
+cat("\n============================================================\n")
+cat("17. PERFORMANCE FACTOR\n")
+cat("============================================================\n")
+
+performance <- factor(
+  c(
+    "Excellent",
+    "Good",
+    "Average",
+    "Good",
+    "Excellent",
+    "Bad"
+  )
+)
+
+cat("\nPerformance factor:\n")
+print(performance)
+
+cat("\nPerformance levels:\n")
+print(levels(performance))
+
+
+# ============================================================
+# 18. ORDERED PERFORMANCE FACTOR
+# ============================================================
+
+cat("\n============================================================\n")
+cat("18. ORDERED PERFORMANCE FACTOR\n")
+cat("============================================================\n")
+
+performance <- ordered(
+  c(
+    "Excellent",
+    "Good",
+    "Average",
+    "Good",
+    "Excellent",
+    "Bad"
+  ),
+  levels = c(
+    "Bad",
+    "Average",
+    "Good",
+    "Excellent"
+  )
+)
+
+cat("\nOrdered performance:\n")
+print(performance)
+
+cat("\nPerformance levels:\n")
+print(levels(performance))
+
+cat("\nInternal codes:\n")
+print(unclass(performance))
+
+
+# ============================================================
+# 19. FACTOR WITH EXPLICIT LEVELS
+# ============================================================
+
+cat("\n============================================================\n")
+cat("19. EXPLICIT LEVELS\n")
+cat("============================================================\n")
+
+x <- c(
+  "Red",
+  "Blue",
+  "Red",
+  "Green"
+)
+
+colour_factor <- factor(
+  x,
+  levels = c(
+    "Red",
+    "Blue",
+    "Green",
+    "Yellow"
+  )
+)
+
+cat("\nOriginal vector:\n")
+print(x)
+
+cat("\nFactor:\n")
+print(colour_factor)
+
+cat("\nAll specified levels:\n")
+print(levels(colour_factor))
+
+
+# ============================================================
+# 20. FACTOR SUMMARY\n
+# ============================================================
+
+cat("\n============================================================\n")
+cat("20. FACTOR SUMMARY\n")
+cat("============================================================\n")
+
+student_gender <- factor(
+  c(
+    "Male",
+    "Female",
+    "Female",
+    "Male",
+    "Male"
+  )
+)
+
+cat("\nStudent gender:\n")
+print(student_gender)
+
+cat("\nLevels:\n")
+print(levels(student_gender))
+
+cat("\nClass:\n")
+print(class(student_gender))
+
+cat("\nInternal codes:\n")
+print(unclass(student_gender))
+
+cat("\nNumber of levels:\n")
+print(nlevels(student_gender))
+
+
+# ============================================================
+# FINAL MESSAGE
+# ============================================================
+
+cat("\n============================================================\n")
+cat("ALL FACTOR EXAMPLES COMPLETED SUCCESSFULLY\n")
+cat("============================================================\n")
