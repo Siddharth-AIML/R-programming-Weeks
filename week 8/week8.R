@@ -1,0 +1,590 @@
+# ============================================================
+# R PROGRAMMING - OPERATIONS ON LISTS
+# NPTEL WEEK 7 & WEEK 8
+# ============================================================
+
+
+# ============================================================
+# 1. CREATING BASIC LISTS
+# ============================================================
+
+list1 <- list(1, 2, 3)
+
+list2 <- list(
+  "water",
+  "juice",
+  "lemonade"
+)
+
+cat("\n================ BASIC LISTS ================\n")
+
+print(list1)
+print(list2)
+
+
+# ============================================================
+# 2. MERGING LISTS
+# ============================================================
+# From NPTEL Week 8:
+# list12 = c(list1, list2)
+
+cat("\n================ MERGING LISTS ================\n")
+
+list12 <- c(list1, list2)
+
+print(list12)
+
+
+# ============================================================
+# 3. APPENDING TO A LIST
+# ============================================================
+# append() is used to add an element at the end.
+
+cat("\n================ APPENDING LIST ================\n")
+
+list1 <- list(1, 2, 3)
+
+list2 <- list(
+  "water",
+  "juice",
+  "lemonade"
+)
+
+list1_append <- append(list1, 100)
+
+list2_append <- append(list2, "coffee")
+
+cat("\nlist1 after appending 100:\n")
+print(list1_append)
+
+cat("\nlist2 after appending coffee:\n")
+print(list2_append)
+
+
+# ============================================================
+# 4. APPENDING AFTER A PARTICULAR POSITION
+# ============================================================
+# append(x, value, after = position)
+
+cat("\n================ APPENDING AFTER POSITION ================\n")
+
+list1 <- list(1, 2, 3)
+
+list2 <- list(
+  "water",
+  "juice",
+  "lemonade"
+)
+
+list1_after <- append(
+  list1,
+  100,
+  after = 2
+)
+
+list2_after <- append(
+  list2,
+  "coffee",
+  after = 2
+)
+
+cat("\nAdd 100 after position 2:\n")
+print(list1_after)
+
+cat("\nAdd coffee after position 2:\n")
+print(list2_after)
+
+
+# ============================================================
+# 5. REMOVING AN ELEMENT FROM A LIST
+# ============================================================
+# Negative indexing removes an element.
+
+cat("\n================ REMOVING FROM LIST ================\n")
+
+list1 <- list(1, 2, 3)
+
+list2 <- list(
+  "water",
+  "juice",
+  "lemonade"
+)
+
+cat("\nOriginal list1:\n")
+print(list1)
+
+cat("\nRemoving element at position 2:\n")
+print(list1[-2])
+
+
+cat("\nOriginal list2:\n")
+print(list2)
+
+cat("\nRemoving element at position 1:\n")
+print(list2[-1])
+
+
+# ============================================================
+# 6. EXTRACTING ELEMENTS FROM A LIST
+# ============================================================
+# Use [ ] to extract multiple list elements.
+
+cat("\n================ EXTRACTING FROM LIST ================\n")
+
+list1 <- list(1, 2, 3, 4, 5, 6)
+
+list2 <- list(
+  "water",
+  "juice",
+  "lemonade",
+  "tea",
+  "coffee",
+  "milk"
+)
+
+cat("\nOriginal list1:\n")
+print(list1)
+
+
+# Extract positions 2 to 4
+cat("\nlist1[2:4]:\n")
+print(list1[2:4])
+
+
+# Extract positions 1, 3 and 5
+cat("\nlist1[c(1,3,5)]:\n")
+print(list1[c(1, 3, 5)])
+
+
+cat("\nOriginal list2:\n")
+print(list2)
+
+
+# Extract positions 2 to 4
+cat("\nlist2[2:4]:\n")
+print(list2[2:4])
+
+
+# Extract positions 1, 3 and 5
+cat("\nlist2[c(1,3,5)]:\n")
+print(list2[c(1, 3, 5)])
+
+
+# ============================================================
+# 7. ACCESSING AN ELEMENT USING [[ ]]
+# ============================================================
+# [[]] extracts the actual object from a list.
+
+cat("\n================ ACCESSING LIST ELEMENTS ================\n")
+
+z1 <- list(
+  c("water", "juice", "lemonade"),
+  rep(1:4, each = 2),
+  matrix(
+    data = 5:8,
+    nrow = 2,
+    ncol = 2,
+    byrow = TRUE
+  )
+)
+
+cat("\nComplete z1 list:\n")
+print(z1)
+
+
+# Access first object
+cat("\nz1[[1]]:\n")
+print(z1[[1]])
+
+
+# Access "juice"
+cat("\nz1[[1]][2]:\n")
+print(z1[[1]][2])
+
+
+# IMPORTANT DIFFERENCE
+cat("\nz1[1][2]:\n")
+print(z1[1][2])
+
+cat("\nNotice that z1[[1]][2] gives 'juice',\n")
+cat("while z1[1][2] does not access the second element\n")
+cat("inside the first list element.\n")
+
+
+# ============================================================
+# 8. LIST CONTAINING DIFFERENT OBJECT TYPES
+# ============================================================
+# A list can contain different types of objects.
+
+cat("\n================ DIFFERENT OBJECT TYPES ================\n")
+
+z1 <- list(
+  c("water", "juice", "lemonade"),
+  rep(1:4, each = 2),
+  matrix(
+    data = 5:8,
+    nrow = 2,
+    ncol = 2,
+    byrow = TRUE
+  )
+)
+
+print(z1)
+
+
+# Access individual objects
+
+cat("\nFirst object - character vector:\n")
+print(z1[[1]])
+
+cat("\nSecond object - numeric vector:\n")
+print(z1[[2]])
+
+cat("\nThird object - matrix:\n")
+print(z1[[3]])
+
+
+# ============================================================
+# 9. MATRICES INSIDE LISTS
+# ============================================================
+
+cat("\n================ MATRICES INSIDE LISTS ================\n")
+
+x1 <- matrix(
+  nrow = 2,
+  ncol = 2,
+  data = 1:4,
+  byrow = TRUE
+)
+
+x2 <- matrix(
+  nrow = 2,
+  ncol = 2,
+  data = 5:8,
+  byrow = TRUE
+)
+
+cat("\nMatrix x1:\n")
+print(x1)
+
+cat("\nMatrix x2:\n")
+print(x2)
+
+
+# Create a list containing matrices
+
+matlist <- list(x1, x2)
+
+cat("\nList containing two matrices:\n")
+print(matlist)
+
+
+# Access first matrix
+
+cat("\nmatlist[1]:\n")
+print(matlist[1])
+
+
+# Access second matrix
+
+cat("\nmatlist[2]:\n")
+print(matlist[2])
+
+
+# Access actual first matrix using [[ ]]
+
+cat("\nmatlist[[1]]:\n")
+print(matlist[[1]])
+
+
+# Access actual second matrix using [[ ]]
+
+cat("\nmatlist[[2]]:\n")
+print(matlist[[2]])
+
+
+# ============================================================
+# 10. CONVERTING LIST TO VECTOR
+# ============================================================
+# unlist() converts a list into a vector.
+
+cat("\n================ LIST TO VECTOR ================\n")
+
+list1 <- list(1, 2, 3)
+
+list2 <- list(
+  "water",
+  "juice",
+  "lemonade"
+)
+
+cat("\nOriginal numeric list:\n")
+print(list1)
+
+cat("\nUnlisted numeric vector:\n")
+print(unlist(list1))
+
+
+cat("\nOriginal character list:\n")
+print(list2)
+
+cat("\nUnlisted character vector:\n")
+print(unlist(list2))
+
+
+# ============================================================
+# 11. MODE OF LIST AND UNLISTED VECTOR
+# ============================================================
+
+cat("\n================ MODE ================\n")
+
+cat("\nMode of list1:\n")
+print(mode(list1))
+
+numeric_vector <- unlist(list1)
+
+cat("\nMode after unlist():\n")
+print(mode(numeric_vector))
+
+
+# ============================================================
+# 12. NESTED LIST
+# ============================================================
+# A list can also contain another list.
+
+cat("\n================ NESTED LIST ================\n")
+
+nested_list <- list(
+  numbers = list(10, 20, 30),
+  drinks = list(
+    "water",
+    "juice",
+    "coffee"
+  )
+)
+
+print(nested_list)
+
+
+# Access nested list
+
+cat("\nFirst nested list:\n")
+print(nested_list[[1]])
+
+
+cat("\nSecond nested list:\n")
+print(nested_list[[2]])
+
+
+# Access coffee
+
+cat("\nAccess coffee:\n")
+print(nested_list[[2]][[3]])
+
+
+# ============================================================
+# 13. NAMED LIST
+# ============================================================
+# Lists can have names.
+
+cat("\n================ NAMED LIST ================\n")
+
+z <- list(
+  a1 = 1,
+  a2 = "c",
+  a3 = 1:3
+)
+
+cat("\nNamed list:\n")
+print(z)
+
+
+# Display names
+
+cat("\nNames of list:\n")
+print(names(z))
+
+
+# ============================================================
+# 14. ACCESS NAMED LIST ELEMENTS
+# ============================================================
+
+cat("\n================ ACCESS NAMED ELEMENTS ================\n")
+
+cat("\nz$a1:\n")
+print(z$a1)
+
+cat("\nz$a2:\n")
+print(z$a2)
+
+cat("\nz$a3:\n")
+print(z$a3)
+
+
+# Access using [[name]]
+
+cat("\nz[['a1']]:\n")
+print(z[["a1"]])
+
+cat("\nz[['a2']]:\n")
+print(z[["a2"]])
+
+cat("\nz[['a3']]:\n")
+print(z[["a3"]])
+
+
+# ============================================================
+# 15. CHANGING NAME OF A LIST ELEMENT
+# ============================================================
+
+cat("\n================ CHANGING LIST NAME ================\n")
+
+z <- list(
+  a1 = 1,
+  a2 = "c",
+  a3 = 1:3
+)
+
+cat("\nOriginal names:\n")
+print(names(z))
+
+
+# Change third name
+
+names(z)[3] <- "c2"
+
+cat("\nNames after changing third element:\n")
+print(names(z))
+
+cat("\nUpdated list:\n")
+print(z)
+
+
+# ============================================================
+# 16. MODIFYING LIST ELEMENT
+# ============================================================
+
+cat("\n================ MODIFYING LIST ELEMENT ================\n")
+
+mylist <- list(
+  10,
+  20,
+  30
+)
+
+cat("\nOriginal list:\n")
+print(mylist)
+
+
+# Modify second element
+
+mylist[[2]] <- 200
+
+cat("\nAfter changing second element to 200:\n")
+print(mylist)
+
+
+# ============================================================
+# 17. ADDING A NEW NAMED ELEMENT
+# ============================================================
+
+cat("\n================ ADDING NAMED ELEMENT ================\n")
+
+student <- list(
+  name = "Siddharth",
+  age = 21
+)
+
+cat("\nOriginal student list:\n")
+print(student)
+
+
+student$branch <- "Computer Engineering"
+
+cat("\nAfter adding branch:\n")
+print(student)
+
+
+# ============================================================
+# 18. REMOVING NAMED ELEMENT
+# ============================================================
+
+cat("\n================ REMOVING NAMED ELEMENT ================\n")
+
+student <- list(
+  name = "Siddharth",
+  age = 21,
+  branch = "Computer Engineering"
+)
+
+cat("\nOriginal student list:\n")
+print(student)
+
+
+student$age <- NULL
+
+cat("\nAfter removing age:\n")
+print(student)
+
+
+# ============================================================
+# 19. LENGTH OF A LIST
+# ============================================================
+
+cat("\n================ LENGTH OF LIST ================\n")
+
+mylist <- list(
+  10,
+  "R",
+  TRUE,
+  20:25
+)
+
+cat("\nList:\n")
+print(mylist)
+
+cat("\nLength of list:\n")
+print(length(mylist))
+
+
+# ============================================================
+# 20. CHECK LIST STRUCTURE
+# ============================================================
+
+cat("\n================ STRUCTURE OF LIST ================\n")
+
+mylist <- list(
+  numbers = 1:5,
+  name = "R Programming",
+  matrix = matrix(1:4, nrow = 2)
+)
+
+str(mylist)
+
+
+# ============================================================
+# 21. CHECK MODE AND CLASS
+# ============================================================
+
+cat("\n================ MODE AND CLASS ================\n")
+
+mylist <- list(
+  10,
+  "R",
+  TRUE
+)
+
+cat("\nMode:\n")
+print(mode(mylist))
+
+cat("\nClass:\n")
+print(class(mylist))
+
+
+# ============================================================
+# 22. COMPLETE DEMONSTRATION
+# ============================================================
+
+cat("\n============================================================\n")
+cat("COMPLETE LIST OPERATIONS DEMONSTRATION FINISHED\n")
+cat("============================================================\n")
