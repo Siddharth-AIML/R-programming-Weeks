@@ -1,0 +1,11 @@
+  Tukey multiple comparisons of means
+    95% family-wise confidence level
+
+Fit: aov(formula = body_mass_g ~ species, data = p)
+
+$species
+                       diff       lwr       upr    p adj
+Chinstrap-Adelie   26.92385 -132.3528  186.2005 0.916431
+Gentoo-Adelie    1386.27259 1252.2897 1520.2554 0.000000
+Gentoo-Chinstrap 1359.34874 1194.4304 1524.2671 0.000000
+

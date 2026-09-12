@@ -1,0 +1,133 @@
+LAB PROBLEM STATEMENT 6 - PALMER PENGUINS
+=========================================
+
+Observations used: 333 
+
+OVERALL DESCRIPTIVE STATISTICS
+            Statistic        Value
+1                Mean 4.207057e+03
+2              Median 4.050000e+03
+3             Minimum 2.700000e+03
+4             Maximum 6.300000e+03
+5            Variance 6.483725e+05
+6  Standard Deviation 8.052158e+02
+7                  Q1 3.550000e+03
+8                  Q3 4.775000e+03
+9                 IQR 1.225000e+03
+10           Skewness 4.701162e-01
+11           Kurtosis 2.259514e+00
+
+SPECIES-WISE DESCRIPTIVE STATISTICS
+# A tibble: 3 × 13
+  species   Count  Mean Median Minimum Maximum Variance    SD    Q1    Q3   IQR
+  <fct>     <int> <dbl>  <dbl>   <int>   <int>    <dbl> <dbl> <dbl> <dbl> <dbl>
+1 Adelie      146 3706.   3700    2850    4775  210332.  459. 3362.  4000  638.
+2 Chinstrap    68 3733.   3700    2700    4800  147713.  384. 3488.  3950  462.
+3 Gentoo      119 5092.   5050    3950    6300  251478.  501. 4700   5500  800 
+# ℹ 2 more variables: Skewness <dbl>, Kurtosis <dbl>
+
+MALE SHAPIRO-WILK TEST
+
+	Shapiro-Wilk normality test
+
+data:  male
+W = 0.92504, p-value = 1.227e-07
+
+
+FEMALE SHAPIRO-WILK TEST
+
+	Shapiro-Wilk normality test
+
+data:  female
+W = 0.91931, p-value = 6.155e-08
+
+
+TWO-SAMPLE WELCH t-TEST
+
+	Welch Two Sample t-test
+
+data:  male and female
+t = 8.5545, df = 323.9, p-value = 4.794e-16
+alternative hypothesis: true difference in means is not equal to 0
+95 percent confidence interval:
+ 526.2453 840.5783
+sample estimates:
+mean of x mean of y 
+ 4545.685  3862.273 
+
+
+COHEN'S d
+[1] 0.9362048
+
+95% CI FOR MEAN DIFFERENCE
+[1] 526.2453 840.5783
+attr(,"conf.level")
+[1] 0.95
+
+ONE-WAY ANOVA
+             Df    Sum Sq  Mean Sq F value Pr(>F)    
+species       2 145190219 72595110   341.9 <2e-16 ***
+Residuals   330  70069447   212332                   
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+LEVENE'S TEST
+Levene's Test for Homogeneity of Variance (center = median)
+       Df F value   Pr(>F)   
+group   2  5.1349 0.006367 **
+      330                    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+TUKEY HSD
+  Tukey multiple comparisons of means
+    95% family-wise confidence level
+
+Fit: aov(formula = body_mass_g ~ species, data = p)
+
+$species
+                       diff       lwr       upr    p adj
+Chinstrap-Adelie   26.92385 -132.3528  186.2005 0.916431
+Gentoo-Adelie    1386.27259 1252.2897 1520.2554 0.000000
+Gentoo-Chinstrap 1359.34874 1194.4304 1524.2671 0.000000
+
+
+KRUSKAL-WALLIS TEST
+
+	Kruskal-Wallis rank sum test
+
+data:  body_mass_g by species
+Kruskal-Wallis chi-squared = 212.09, df = 2, p-value < 2.2e-16
+
+
+TWO-WAY ANOVA
+             Df    Sum Sq  Mean Sq F value   Pr(>F)    
+species       2 145190219 72595110 758.358  < 2e-16 ***
+sex           1  37090262 37090262 387.460  < 2e-16 ***
+species:sex   2   1676557   838278   8.757 0.000197 ***
+Residuals   327  31302628    95727                     
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+FLIPPER LENGTH STATISTICS
+# A tibble: 3 × 8
+  species   Count  Mean Median Minimum Maximum    SD   IQR
+  <fct>     <int> <dbl>  <dbl>   <int>   <int> <dbl> <dbl>
+1 Adelie      146  190.    190     172     210  6.52   9  
+2 Chinstrap    68  196.    196     178     212  7.13  10  
+3 Gentoo      119  217.    216     203     231  6.59   9.5
+
+FLIPPER LENGTH ANOVA
+             Df Sum Sq Mean Sq F value Pr(>F)    
+species       2  50526   25263   567.4 <2e-16 ***
+Residuals   330  14693      45                   
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+FLIPPER LENGTH KRUSKAL-WALLIS
+
+	Kruskal-Wallis rank sum test
+
+data:  flipper_length_mm by species
+Kruskal-Wallis chi-squared = 237.35, df = 2, p-value < 2.2e-16
+
