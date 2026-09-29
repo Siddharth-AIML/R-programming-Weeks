@@ -1,0 +1,4 @@
+"Cluster","Customers","AvgRecency","AvgFrequency","AvgMonetary","AvgTransactionValue","Segment","MarketingRecommendation"
+1,1592,74.4278595669319,2.76507537688442,993.327011934673,20.5297614593967,"Regular Customers","Personalized recommendations, seasonal promotions, cross-selling and targeted discounts."
+2,1625,154.47886784188,1.19692307692308,267.249896,18.2314446296528,"At-Risk Customers","Reactivation emails, limited-time discounts, personalized reminders and win-back campaigns."
+3,1121,22.5304165582565,7.83050847457627,2687.00356824264,22.1389116062503,"High-Value Active Customers","VIP loyalty program, exclusive offers, early access to products, personalized rewards and premium customer service."

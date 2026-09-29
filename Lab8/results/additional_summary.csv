@@ -1,0 +1,9 @@
+Metric,Value
+Trips,2753053
+Average distance,3.28514752167866
+Median distance,1.7
+Average fare,18.4141186457362
+Median fare,12.8
+Average total amount,27.3761797393657
+Average trip duration in minutes,14.9247552868276
+Correlation between distance and fare,0.944386503309462

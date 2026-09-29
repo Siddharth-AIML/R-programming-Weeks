@@ -1,0 +1,32 @@
+PUBorough,payment_type,Trips
+Manhattan,1,2071397
+Manhattan,2,368476
+Queens,1,198667
+Queens,2,49779
+Manhattan,4,19260
+Brooklyn,1,14618
+Manhattan,3,8912
+Unknown,1,7641
+Bronx,1,4462
+Queens,4,3352
+Brooklyn,2,1875
+Unknown,2,1709
+Queens,3,1511
+Bronx,2,425
+N/A,1,312
+Brooklyn,4,161
+N/A,2,101
+Brooklyn,3,90
+Unknown,3,66
+Unknown,4,53
+EWR,1,43
+N/A,3,33
+Bronx,3,28
+N/A,4,27
+Bronx,4,20
+Staten Island,2,12
+Staten Island,1,11
+EWR,2,4
+Staten Island,3,4
+EWR,4,3
+Staten Island,4,1

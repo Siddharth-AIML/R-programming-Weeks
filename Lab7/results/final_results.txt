@@ -1,0 +1,47 @@
+============================================================
+             LAB 7 - FINAL RESULTS
+============================================================
+
+Number of original transactions: 541909 
+Number of cleaned transactions: 392692 
+Number of customers: 4338 
+Optimal number of clusters: 3 
+K-Means Silhouette Score: 0.2698 
+Hierarchical Silhouette Score: 0.2157 
+
+============================================================
+CLUSTERING COMPARISON
+============================================================
+        Method SilhouetteScore
+1      K-Means       0.2698018
+2 Hierarchical       0.2157100
+
+============================================================
+CLUSTER PROFILES
+============================================================
+# A tibble: 3 × 9
+  Cluster Customers AvgRecency AvgFrequency AvgMonetary AvgTransactionValue
+    <int>     <int>      <dbl>        <dbl>       <dbl>               <dbl>
+1       1      1592       74.4         2.77        993.                20.5
+2       2      1625      154.          1.20        267.                18.2
+3       3      1121       22.5         7.83       2687.                22.1
+# ℹ 3 more variables: AvgQuantity <dbl>, AvgPurchaseFrequency <dbl>,
+#   Interpretation <chr>
+
+============================================================
+MODEL PERFORMANCE
+============================================================
+          Model  Accuracy Precision    Recall  F1_Score   ROC_AUC
+1 Random Forest 0.9250288 0.8423423 0.8617512 0.8519362 0.9760581
+2           SVM 0.9354095 0.8642534 0.8801843 0.8721461 0.9741865
+
+============================================================
+MARKETING RECOMMENDATIONS
+============================================================
+# A tibble: 3 × 8
+  Cluster Customers AvgRecency AvgFrequency AvgMonetary AvgTransactionValue
+    <int>     <int>      <dbl>        <dbl>       <dbl>               <dbl>
+1       1      1592       74.4         2.77        993.                20.5
+2       2      1625      154.          1.20        267.                18.2
+3       3      1121       22.5         7.83       2687.                22.1
+# ℹ 2 more variables: Segment <chr>, MarketingRecommendation <chr>

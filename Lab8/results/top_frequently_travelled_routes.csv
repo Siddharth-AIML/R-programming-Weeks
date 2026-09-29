@@ -1,0 +1,16 @@
+PULocationID,DOLocationID,PUBorough,PUZone,DOBorough,DOZone,Trips,TotalRevenue,AverageFare,AverageDistance
+237,236,Manhattan,Upper East Side South,Manhattan,Upper East Side North,21272,334729.150000006,8.8901043625423,1.06109157578037
+236,237,Manhattan,Upper East Side North,Manhattan,Upper East Side South,18748,301384.940000005,9.27784830381908,1.04793577981652
+236,236,Manhattan,Upper East Side North,Manhattan,Upper East Side North,14911,196771.380000004,6.79395077459613,0.647829119442027
+237,237,Manhattan,Upper East Side South,Manhattan,Upper East Side South,13889,191780.350000004,7.35070415436685,0.648544891640867
+161,237,Manhattan,Midtown Center,Manhattan,Upper East Side South,9998,170628.640000002,9.88143628725745,1.07718343668734
+142,239,Manhattan,Lincoln Square East,Manhattan,Upper West Side South,8652,129504.130000002,8.02932269995375,0.993248959778084
+237,161,Manhattan,Upper East Side South,Manhattan,Midtown Center,8569,141108.470000002,9.77425720620847,1.05946084724005
+161,236,Manhattan,Midtown Center,Manhattan,Upper East Side North,8459,185234.339999999,13.9097883910627,1.95171651495448
+239,142,Manhattan,Upper West Side South,Manhattan,Lincoln Square East,8293,120522.090000002,7.85082961533822,0.8815760279754
+239,238,Manhattan,Upper West Side South,Manhattan,Upper West Side North,8108,111847.810000001,7.14514553527383,0.839831031080416
+141,236,Manhattan,Lenox Hill West,Manhattan,Upper East Side North,7516,119828.190000001,9.22040979244282,1.08712213943587
+237,162,Manhattan,Upper East Side South,Manhattan,Midtown East,7384,118746.550000001,9.29982529794152,0.978796045503795
+186,230,Manhattan,Penn Station/Madison Sq West,Manhattan,Times Sq/Theatre District,6876,129461.810000001,11.8517306573589,1.06329261198371
+142,238,Manhattan,Lincoln Square East,Manhattan,Upper West Side North,6830,119060.410000001,10.1523279648609,1.50362225475842
+236,161,Manhattan,Upper East Side North,Manhattan,Midtown Center,6811,145580.939999999,14.1895169578623,1.92591983556012

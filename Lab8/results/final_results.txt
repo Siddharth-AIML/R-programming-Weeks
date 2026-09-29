@@ -1,0 +1,204 @@
+LAB 8: HIGH-PERFORMANCE BIG DATA ANALYTICS
+==========================================
+
+Dataset: NYC TLC Yellow Taxi Trip Records
+Period: January 2024
+
+Original rows: 2964624 
+Cleaned rows: 2754807 
+Final analysis rows: 2753053 
+Approximate dataset size in MB: 420.13 
+
+Benchmark results:
+             Method MeanSeconds MinSeconds MaxSeconds ApproxMemoryMB
+             <char>       <num>      <num>      <num>          <num>
+1: Base_R_aggregate  1.48000000       1.35       1.62         0.0011
+2:       Vectorized  0.01666667       0.01       0.03         0.0015
+3:       data_table  0.05333333       0.04       0.06         0.0015
+4:           lapply  0.19000000       0.19       0.19         0.0015
+
+Parallel comparison:
+       Method ExecutionTimeSeconds Workers
+       <char>                <num>   <int>
+1: Sequential           0.30000000       1
+2:   Parallel          14.11000000       4
+3:    Speedup           0.02126152       4
+
+Trips by hour:
+    PickupHour  Trips AverageFare TotalRevenue
+         <int>  <int>       <num>        <num>
+ 1:          0  15767    27.54645     597025.0
+ 2:          1  35935    21.98140    1088120.8
+ 3:          2  75270    18.51411    1986711.3
+ 4:          3 106526    17.56822    2702511.5
+ 5:          4 120898    17.83704    3122275.0
+ 6:          5 131594    17.99124    3421605.7
+ 7:          6 142903    17.56931    3634832.7
+ 8:          7 155377    17.74881    3993851.0
+ 9:          8 161027    18.35818    4261900.4
+10:          9 173310    19.20168    4787700.9
+11:         10 178945    19.04105    4896908.8
+12:         11 180249    19.39993    5364849.5
+13:         12 193249    18.04097    5448513.8
+14:         13 197941    16.93444    5328439.8
+15:         14 172325    17.61268    4789929.4
+16:         15 150619    18.05917    4127966.7
+17:         16 149712    18.34693    4138755.1
+18:         17 131644    19.14895    3768608.4
+19:         18  98196    20.36702    2945705.7
+20:         19  69833    19.68765    2016812.8
+21:         20  45782    17.34950    1184699.2
+22:         21  32288    16.35105     794297.9
+23:         22  20765    17.86340     547200.0
+24:         23  12898    22.95234     418852.3
+    PickupHour  Trips AverageFare TotalRevenue
+         <int>  <int>       <num>        <num>
+
+Trips by weekday:
+   PickupWeekday  Trips TotalRevenue AverageFare
+          <fctr>  <int>        <num>       <num>
+1:        Monday 355125     10318415    19.73615
+2:       Tuesday 431529     11958209    18.56156
+3:     Wednesday 462327     12668606    18.27568
+4:      Thursday 408744     11298385    18.45010
+5:        Friday 410829     11006478    17.79341
+6:      Saturday 393709      9914146    17.12107
+7:        Sunday 290790      8203833    19.37795
+
+Monthly demand:
+   PickupMonth   Trips TotalRevenue AverageFare
+         <ord>   <int>        <num>       <num>
+1:         Dec   22065     589838.1    18.22798
+2:         Jan 2730988   74778235.7    18.41562
+
+Top frequent routes:
+    PULocationID DOLocationID PUBorough                       PUZone DOBorough
+           <int>        <int>    <char>                       <char>    <char>
+ 1:          237          236 Manhattan        Upper East Side South Manhattan
+ 2:          236          237 Manhattan        Upper East Side North Manhattan
+ 3:          236          236 Manhattan        Upper East Side North Manhattan
+ 4:          237          237 Manhattan        Upper East Side South Manhattan
+ 5:          161          237 Manhattan               Midtown Center Manhattan
+ 6:          142          239 Manhattan          Lincoln Square East Manhattan
+ 7:          237          161 Manhattan        Upper East Side South Manhattan
+ 8:          161          236 Manhattan               Midtown Center Manhattan
+ 9:          239          142 Manhattan        Upper West Side South Manhattan
+10:          239          238 Manhattan        Upper West Side South Manhattan
+11:          141          236 Manhattan              Lenox Hill West Manhattan
+12:          237          162 Manhattan        Upper East Side South Manhattan
+13:          186          230 Manhattan Penn Station/Madison Sq West Manhattan
+14:          142          238 Manhattan          Lincoln Square East Manhattan
+15:          236          161 Manhattan        Upper East Side North Manhattan
+                       DOZone Trips TotalRevenue AverageFare AverageDistance
+                       <char> <int>        <num>       <num>           <num>
+ 1:     Upper East Side North 21272     334729.2    8.890104       1.0610916
+ 2:     Upper East Side South 18748     301384.9    9.277848       1.0479358
+ 3:     Upper East Side North 14911     196771.4    6.793951       0.6478291
+ 4:     Upper East Side South 13889     191780.4    7.350704       0.6485449
+ 5:     Upper East Side South  9998     170628.6    9.881436       1.0771834
+ 6:     Upper West Side South  8652     129504.1    8.029323       0.9932490
+ 7:            Midtown Center  8569     141108.5    9.774257       1.0594608
+ 8:     Upper East Side North  8459     185234.3   13.909788       1.9517165
+ 9:       Lincoln Square East  8293     120522.1    7.850830       0.8815760
+10:     Upper West Side North  8108     111847.8    7.145146       0.8398310
+11:     Upper East Side North  7516     119828.2    9.220410       1.0871221
+12:              Midtown East  7384     118746.6    9.299825       0.9787960
+13: Times Sq/Theatre District  6876     129461.8   11.851731       1.0632926
+14:     Upper West Side North  6830     119060.4   10.152328       1.5036223
+15:            Midtown Center  6811     145580.9   14.189517       1.9259198
+                                                        Route
+                                                       <char>
+ 1:            Upper East Side South to Upper East Side North
+ 2:            Upper East Side North to Upper East Side South
+ 3:            Upper East Side North to Upper East Side North
+ 4:            Upper East Side South to Upper East Side South
+ 5:                   Midtown Center to Upper East Side South
+ 6:              Lincoln Square East to Upper West Side South
+ 7:                   Upper East Side South to Midtown Center
+ 8:                   Midtown Center to Upper East Side North
+ 9:              Upper West Side South to Lincoln Square East
+10:            Upper West Side South to Upper West Side North
+11:                  Lenox Hill West to Upper East Side North
+12:                     Upper East Side South to Midtown East
+13: Penn Station/Madison Sq West to Times Sq/Theatre District
+14:              Lincoln Square East to Upper West Side North
+15:                   Upper East Side North to Midtown Center
+
+Top revenue routes:
+    PULocationID DOLocationID PUBorough                    PUZone DOBorough
+           <int>        <int>    <char>                    <char>    <char>
+ 1:          132          265    Queens               JFK Airport       N/A
+ 2:          132          230    Queens               JFK Airport Manhattan
+ 3:          138          230    Queens         LaGuardia Airport Manhattan
+ 4:          237          236 Manhattan     Upper East Side South Manhattan
+ 5:          236          237 Manhattan     Upper East Side North Manhattan
+ 6:          132           48    Queens               JFK Airport Manhattan
+ 7:          132          164    Queens               JFK Airport Manhattan
+ 8:          230          138 Manhattan Times Sq/Theatre District    Queens
+ 9:          230          132 Manhattan Times Sq/Theatre District    Queens
+10:          138          161    Queens         LaGuardia Airport Manhattan
+11:          132          161    Queens               JFK Airport Manhattan
+12:          132          163    Queens               JFK Airport Manhattan
+13:          132          170    Queens               JFK Airport Manhattan
+14:          132           68    Queens               JFK Airport Manhattan
+15:          138          265    Queens         LaGuardia Airport       N/A
+                       DOZone Trips TotalRevenue AverageFare AverageDistance
+                       <char> <int>        <num>       <num>           <num>
+ 1:            Outside of NYC  5822     717883.2  103.563384       20.605189
+ 2: Times Sq/Theatre District  5739     540284.2   70.338000       18.051579
+ 3: Times Sq/Theatre District  5369     407551.2   47.249236       10.357320
+ 4:     Upper East Side North 21272     334729.2    8.890104        1.061092
+ 5:     Upper East Side South 18748     301384.9    9.277848        1.047936
+ 6:              Clinton East  3177     296867.7   70.389569       18.303912
+ 7:             Midtown South  2996     286584.7   70.259706       17.277373
+ 8:         LaGuardia Airport  3521     263869.2   49.116245       11.286049
+ 9:               JFK Airport  2644     244018.4   70.523672       17.610087
+10:            Midtown Center  3228     237822.8   44.964467       10.054498
+11:            Midtown Center  2421     231955.7   70.289818       17.735836
+12:             Midtown North  2383     224399.7   70.350311       18.362337
+13:               Murray Hill  2356     224271.8   70.150463       16.952789
+14:              East Chelsea  2272     217361.0   70.196831       18.107099
+15:            Outside of NYC  1404     199950.4  113.248896       22.678583
+                                             Route
+                                            <char>
+ 1:                  JFK Airport to Outside of NYC
+ 2:       JFK Airport to Times Sq/Theatre District
+ 3: LaGuardia Airport to Times Sq/Theatre District
+ 4: Upper East Side South to Upper East Side North
+ 5: Upper East Side North to Upper East Side South
+ 6:                    JFK Airport to Clinton East
+ 7:                   JFK Airport to Midtown South
+ 8: Times Sq/Theatre District to LaGuardia Airport
+ 9:       Times Sq/Theatre District to JFK Airport
+10:            LaGuardia Airport to Midtown Center
+11:                  JFK Airport to Midtown Center
+12:                   JFK Airport to Midtown North
+13:                     JFK Airport to Murray Hill
+14:                    JFK Airport to East Chelsea
+15:            LaGuardia Airport to Outside of NYC
+
+Payment summary:
+   payment_type   Trips TotalRevenue AverageFare PaymentMethod
+          <num>   <int>        <num>       <num>        <char>
+1:            1 2297151   64490583.2    18.37411   Credit card
+2:            2  422381   10070057.0    18.59865          Cash
+3:            4   22877     571979.2    19.66366       Dispute
+4:            3   10644     235454.4    17.04084     No charge
+
+Additional summary:
+                                  Metric           Value
+                                  <char>           <num>
+1:                                 Trips 2753053.0000000
+2:                      Average distance       3.2851475
+3:                       Median distance       1.7000000
+4:                          Average fare      18.4141186
+5:                           Median fare      12.8000000
+6:                  Average total amount      27.3761797
+7:      Average trip duration in minutes      14.9247553
+8: Correlation between distance and fare       0.9443865
+
+Recommended interpretation:
+Review the generated graphs and CSV files. Report the measured
+ execution times, speedup, data quality, demand peaks, and route
+ patterns. Do not claim a method is faster unless the benchmark
+ results support that conclusion.

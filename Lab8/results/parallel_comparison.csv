@@ -1,0 +1,4 @@
+Method,ExecutionTimeSeconds,Workers
+Sequential,0.299999999999983,1
+Parallel,14.11,4
+Speedup,0.0212615166548535,4
